@@ -57,9 +57,9 @@
         </div>
 
         <div class="card-body">
-          <!-- [formGroup] belongs here -->
           <form [formGroup]="employeeForm">
             <div class="row g-2">
+              <!-- Name -->
               <div class="col-12">
                 <label for="employeeName" class="form-label">Name</label>
                 <input
@@ -68,9 +68,14 @@
                   formControlName="employeeName"
                   class="form-control"
                   placeholder="Enter name"
+                  [class.is-invalid]="employeeForm.get('employeeName')?.touched && employeeForm.get('employeeName')?.invalid"
                 />
+                @if (employeeForm.get('employeeName')?.touched && employeeForm.get('employeeName')?.invalid) {
+                  <div class="text-danger small mt-1">Name is required.</div>
+                }
               </div>
 
+              <!-- Email -->
               <div class="col-12">
                 <label for="employeeEmail" class="form-label">Email-Id</label>
                 <input
@@ -79,20 +84,40 @@
                   formControlName="employeeEmail"
                   class="form-control"
                   placeholder="Enter email"
+                  [class.is-invalid]="employeeForm.get('employeeEmail')?.touched && employeeForm.get('employeeEmail')?.invalid"
                 />
+                @if (employeeForm.get('employeeEmail')?.touched && employeeForm.get('employeeEmail')?.invalid) {
+                  <div class="text-danger small mt-1">Please enter a valid email address.</div>
+                }
               </div>
 
+              <!-- Contact -->
               <div class="col-6">
-                <label for="employeePhone" class="form-label">Contact No</label>
-                <input
-                  type="text"
-                  id="employeePhone"
-                  formControlName="employeePhone"
-                  class="form-control"
-                  placeholder="Enter phone"
-                />
-              </div>
+  <label for="employeePhone" class="form-label">Contact No</label>
+  <input
+    type="text"
+    id="employeePhone"
+    formControlName="employeePhone"
+    class="form-control"
+    placeholder="10-digit number"
+    maxlength="10"
+    (input)="onPhoneInput($event)"
+    [class.is-invalid]="employeeForm.get('employeePhone')?.touched && employeeForm.get('employeePhone')?.invalid"
+  />
 
+  @if (employeeForm.get('employeePhone')?.touched && employeeForm.get('employeePhone')?.invalid) {
+    <div class="text-danger small mt-1">
+      @if (employeeForm.get('employeePhone')?.errors?.['required']) {
+        Phone number is required.
+      }
+      @if (employeeForm.get('employeePhone')?.errors?.['pattern']) {
+        Enter exactly 10 digits (numbers only).
+      }
+    </div>
+  }
+</div>
+
+              <!-- Salary -->
               <div class="col-6">
                 <label for="employeeSalary" class="form-label">Salary</label>
                 <input
@@ -101,9 +126,14 @@
                   formControlName="employeeSalary"
                   class="form-control"
                   placeholder="Enter salary"
+                  [class.is-invalid]="employeeForm.get('employeeSalary')?.touched && employeeForm.get('employeeSalary')?.invalid"
                 />
+                @if (employeeForm.get('employeeSalary')?.touched && employeeForm.get('employeeSalary')?.invalid) {
+                  <div class="text-danger small mt-1">Salary is required.</div>
+                }
               </div>
 
+              <!-- Address (Textarea) -->
               <div class="col-12">
                 <label for="employeeAddress" class="form-label">Address</label>
                 <textarea
@@ -112,19 +142,36 @@
                   class="form-control"
                   rows="2"
                   placeholder="Enter address"
+                  [class.is-invalid]="employeeForm.get('employeeaddress')?.touched && employeeForm.get('employeeaddress')?.invalid"
                 ></textarea>
+                @if (employeeForm.get('employeeaddress')?.touched && employeeForm.get('employeeaddress')?.invalid) {
+                  <div class="text-danger small mt-1">Address is required.</div>
+                }
               </div>
             </div>
 
+            <!-- Action Buttons -->
             <div class="row mt-3">
               <div class="col-6 text-center">
                 <button type="button" class="btn btn-secondary w-100" (click)="onReset()">Reset</button>
               </div>
               <div class="col-6 text-center">
                 @if (!isEditMode) {
-                  <button type="button" class="btn btn-success w-100" (click)="onSave()">Save Employee</button>
+                  <button
+                    type="button"
+                    class="btn btn-success w-100"
+                    [disabled]="employeeForm.invalid"
+                    (click)="onSave()">
+                    Save Employee
+                  </button>
                 } @else {
-                  <button type="button" class="btn btn-warning w-100" (click)="onUpdate()">Update</button>
+                  <button
+                    type="button"
+                    class="btn btn-warning w-100"
+                    [disabled]="employeeForm.invalid"
+                    (click)="onUpdate()">
+                    Update
+                  </button>
                 }
               </div>
             </div>
